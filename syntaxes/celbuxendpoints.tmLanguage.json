@@ -2,8 +2,19 @@
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Celbux Endpoints",
 	"scopeName": "source.csv",
-	"patterns": [{ "include": "#endpoint-group" }],
+	"patterns": [
+		{ "include": "#comments" },
+		{ "include": "#endpoint-group" }
+	],
 	"repository": {
+		"comments": {
+			"match": "^//.*?$",
+			"name": "comment.block.documentation"
+		},
+		"comments-invalid": {
+			"match": "^//.*?$",
+			"name": "invalid.illegal"
+		},
 		"params-patterns": {
 			"patterns": [
 				{ "include": "#params-keyword" }
@@ -17,17 +28,16 @@
 			"patterns": [
 				{ "include": "#endpoint-type" },
 				{ "include": "#endpoint-user" },
-				{ "include": "#endpoint-req" },
-				{ "include": "#endpoint-inout" }
+				{ "include": "#endpoint-bool" }
 			]
 		},
 		"endpoint-type": {
 			"match": "\\bbearer\\b|\\boauth\\b",
 			"name": "endpoint.header.type"
 		},
-		"endpoint-inout": {
-			"match": "\\bin/out\\b",
-			"name": "endpoint.header.inout"
+		"endpoint-bool": {
+			"match": "\\btrue\\b|\\bfalse\\b",
+			"name": "params.open"
 		},
 		"endpoint-user": {
 			"match": "\\buser\\b|\\bdefault\\b|\\bcustomer\\b|\\bvoucher\\b",
@@ -49,7 +59,9 @@
 			},
 			"patterns": [
 				{ "include": "#params-group" },
-				{ "include": "#endpoint-header-group" }
+				{ "include": "#endpoint-header-group" },
+				{ "include": "#inout-group" },
+				{ "include": "#comments-invalid" }
 			]
 		},
 		"endpoint-header-group": {
@@ -63,8 +75,7 @@
 				"0": { "name": "endpoint.header.close" }
 			},
 			"patterns": [
-				{ "include": "#endpoint-patterns" },
-				{ "include": "#endpoint-resp-group" }
+				{ "include": "#endpoint-patterns" }
 			]
 		},
 		"endpoint-resp-group": {
@@ -92,6 +103,39 @@
 				"0": { "name": "endpoint.header.resp.two.close" }
 			},
 			"patterns": []
+		},
+		"inout-group": {
+			"name": "inout.group",
+			"begin": "(?<=\")\\bin/out\\b(?=\")",
+			"end": "[,\n]$",
+			"beginCaptures": {
+				"0": { "name": "inout.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "inout.close" }
+			},
+			"patterns": [
+				{ "include": "#endpoint-resp-group" },
+				{ "include": "#req-group" }
+			]
+		},
+		"req-group": {
+			"name": "req.group",
+			"begin": "(?<=\"in/out\",)\"",
+			"end": "\"",
+			"beginCaptures": {
+				"0": { "name": "req.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "req.close" }
+			},
+			"patterns": [
+				{ "include": "#equals" }
+			]
+		},
+		"equals": {
+			"match": "='.+?'",
+			"name": "req.equals"
 		},
 		"params-group": {
 			"name": "params.group",
