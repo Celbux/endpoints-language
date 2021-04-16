@@ -17,12 +17,17 @@
 			"patterns": [
 				{ "include": "#endpoint-type" },
 				{ "include": "#endpoint-user" },
-				{ "include": "#endpoint-req" }
+				{ "include": "#endpoint-req" },
+				{ "include": "#endpoint-inout" }
 			]
 		},
 		"endpoint-type": {
-			"match": "\\bbearer\\b|\\boauth\\b|\\bin/out\\b",
+			"match": "\\bbearer\\b|\\boauth\\b",
 			"name": "endpoint.header.type"
+		},
+		"endpoint-inout": {
+			"match": "\\bin/out\\b",
+			"name": "endpoint.header.inout"
 		},
 		"endpoint-user": {
 			"match": "\\buser\\b|\\bdefault\\b|\\bcustomer\\b|\\bvoucher\\b",
