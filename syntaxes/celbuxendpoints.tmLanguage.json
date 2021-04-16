@@ -1,0 +1,135 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Celbux Endpoints",
+	"scopeName": "source.csv",
+	"patterns": [{ "include": "#endpoint-group" }],
+	"repository": {
+		"params-patterns": {
+			"patterns": [
+				{ "include": "#params-keyword" }
+			]
+		},
+		"params-keyword": {
+			"match": "\\bif\\b|\\bset\\b|\\bcall\\b",
+			"name": "params.keyword"
+		},
+		"endpoint-patterns": {
+			"patterns": [
+				{ "include": "#endpoint-type" },
+				{ "include": "#endpoint-user" },
+				{ "include": "#endpoint-req" }
+			]
+		},
+		"endpoint-type": {
+			"match": "\\bbearer\\b|\\boauth\\b|\\bin/out\\b",
+			"name": "endpoint.header.type"
+		},
+		"endpoint-user": {
+			"match": "\\buser\\b|\\bdefault\\b|\\bcustomer\\b|\\bvoucher\\b",
+			"name": "endpoint.header.user"
+		},
+		"endpoint-req": {
+			"match": "(?<=\"in/out\",\").+?(?=\")",
+			"name": "endpoint.header.req"
+		},
+		"endpoint-group": {
+			"name": "endpoint.group",
+			"begin": "^.+?(?=,)",
+			"end": "^\n",
+			"beginCaptures": {
+				"0": { "name": "endpoint.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "endpoint.close" }
+			},
+			"patterns": [
+				{ "include": "#params-group" },
+				{ "include": "#endpoint-header-group" }
+			]
+		},
+		"endpoint-header-group": {
+			"name": "endpoint.header.group",
+			"begin": "\\bpost\\b|\\bget\\b|\\bput\\b|\\bpatch\\b|\\bdelete\\b",
+			"end": "\"?,$",
+			"beginCaptures": {
+				"0": { "name": "endpoint.header.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "endpoint.header.close" }
+			},
+			"patterns": [
+				{ "include": "#endpoint-patterns" },
+				{ "include": "#endpoint-resp-group" }
+			]
+		},
+		"endpoint-resp-group": {
+			"name": "endpoint.header.resp.group",
+			"begin": "(?<=\",\")\\w+?(?=\\()",
+			"end": "\\)",
+			"beginCaptures": {
+				"0": { "name": "endpoint.header.resp.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "endpoint.header.resp.close" }
+			},
+			"patterns": [
+				{ "include": "#endpoint-resp-two-group" }
+			]
+		},
+		"endpoint-resp-two-group": {
+			"name": "endpoint.header.resp.two.group",
+			"begin": "(?<=\\(|,)\\w+?(?=\\()",
+			"end": "\\)",
+			"beginCaptures": {
+				"0": { "name": "endpoint.header.resp.two.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "endpoint.header.resp.two.close" }
+			},
+			"patterns": []
+		},
+		"params-group": {
+			"name": "params.group",
+			"begin": "(?<=\")\\bif\\b|\\bset\\b|\\bcall\\b(?=\")",
+			"end": "[,\n]$",
+			"beginCaptures": {
+				"0": { "name": "params.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "params.close" }
+			},
+			"patterns": [
+				{ "include": "#params-two" },
+				{ "include": "#params-three" }
+			]
+		},
+		"params-two": {
+			"name": "params.two.group",
+			"begin": "(?<=\".+?\",\").+?(?=\".*?\")",
+			"end": "\"",
+			"beginCaptures": {
+				"0": { "name": "params.two.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "params.two.close" }
+			},
+			"patterns": [
+				{ "include": "#params-patterns" }
+			]
+		},
+		"params-three": {
+			"name": "params.three.group",
+			"begin": "(?<=\".+?\",\".*?\",\").+?(?=\")",
+			"end": "\"",
+			"beginCaptures": {
+				"0": { "name": "params.three.open" }
+			},
+			"endCaptures": {
+				"0": { "name": "params.three.close" }
+			},
+			"patterns": [
+				{ "include": "#params-patterns" }
+			]
+		}
+	}
+}

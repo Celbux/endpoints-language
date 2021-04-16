@@ -1,0 +1,25 @@
+{
+    "name": "cep",
+    "displayName": "celbux-endpoints-language",
+    "description": "Adds language specific support to Celbux CSV Endpoint definitions",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.55.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "celbuxendpoints",
+            "aliases": ["Celbux Endpoints", "celbuxendpoints"],
+            "extensions": [".csv"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "celbuxendpoints",
+            "scopeName": "source.csv",
+            "path": "./syntaxes/celbuxendpoints.tmLanguage.json"
+        }]
+    }
+}
